@@ -1,1 +1,7 @@
 project_id = "otyhhuyivfdsflvfussu"
+
+[functions.translate]
+verify_jwt = false
+
+[functions.translate-word]
+verify_jwt = false
