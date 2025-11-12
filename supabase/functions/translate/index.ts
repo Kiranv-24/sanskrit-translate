@@ -37,31 +37,32 @@ serve(async (req) => {
 
     const data = await response.json();
 
-    if (response.status === 401) {
+    // Check the code field in the JSON response
+    if (data.code === 401) {
       return new Response(
-        JSON.stringify({ error: 'API key not validated' }),
+        JSON.stringify({ error: 'API key not validated. Please check your LDFY_API_KEY.' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    if (response.status === 402) {
+    if (data.code === 402) {
       return new Response(
         JSON.stringify({ error: 'Insufficient account balance' }),
         { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    if (response.status === 429) {
+    if (data.code === 429) {
       return new Response(
         JSON.stringify({ error: 'Request rate exceeded' }),
         { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    if (!response.ok) {
+    if (data.code !== 200) {
       console.error('Translation API error:', data);
       return new Response(
-        JSON.stringify({ error: 'Translation failed' }),
+        JSON.stringify({ error: data.msg || 'Translation failed' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
