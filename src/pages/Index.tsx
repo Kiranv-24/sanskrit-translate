@@ -14,6 +14,7 @@ const targetLanguages = [
   { code: "ta", name: "Tamil" },
   { code: "te", name: "Telugu" },
   { code: "ml", name: "Malayalam" },
+  { code: "kn", name: "Kannada" },
 ];
 
 const Index = () => {
