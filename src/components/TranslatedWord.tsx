@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface TranslatedWordProps {
@@ -11,6 +11,11 @@ const TranslatedWord = ({ word, sourceLang, targetLang }: TranslatedWordProps) =
   const [translation, setTranslation] = useState<string>("");
   const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Reset translation when target language changes
+  useEffect(() => {
+    setTranslation("");
+  }, [targetLang]);
 
   const handleMouseEnter = async () => {
     setIsHovered(true);
