@@ -20,6 +20,7 @@ const targetLanguages = [
 const Index = () => {
   const [sourceText, setSourceText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
+  const [romanizedText, setRomanizedText] = useState("");
   const [targetLang, setTargetLang] = useState("en");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,6 +32,16 @@ const Index = () => {
 
     setIsLoading(true);
     try {
+      // Get romanization first
+      const romanizeResponse = await supabase.functions.invoke('romanize', {
+        body: { text: sourceText }
+      });
+
+      if (romanizeResponse.data?.code === 200 && romanizeResponse.data?.data?.romanizedText) {
+        setRomanizedText(romanizeResponse.data.data.romanizedText);
+      }
+
+      // Then translate
       const { data, error } = await supabase.functions.invoke('translate', {
         body: {
           text: sourceText,
@@ -115,6 +126,13 @@ const Index = () => {
                 placeholder="Type or paste Sanskrit text here..."
                 className="min-h-[150px] resize-none bg-background border-border focus:border-primary"
               />
+              
+              {sourceText && romanizedText && (
+                <div className="mt-3 p-3 bg-primary/5 rounded-lg border border-primary/20">
+                  <p className="text-xs text-muted-foreground mb-1">Romanized (Latin script):</p>
+                  <p className="text-sm text-foreground italic">{romanizedText}</p>
+                </div>
+              )}
               
               {sourceText && (
                 <div className="mt-4 p-4 bg-muted/50 rounded-lg border border-border">
